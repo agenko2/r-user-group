@@ -1,0 +1,50 @@
+## data exercise
+
+library(tidyverse)
+library(data.table)
+
+getwd()
+setwd("C:/Users/agenkova/Documents/R Group exercises")
+
+#read CVS files into R (I had to convert ".xslx" files into ".CSV" before this opperations, is there a shorter method?)
+
+data17_16=data.table(read.csv(file="2017-16 Index Crime.csv"), header=TRUE)
+data18_17=data.table(read.csv(file="2018-17 Index Crime.csv"), header=TRUE)
+
+# I calculated variables for each of the offense/arrest types of 2018. 
+### When I cbind the vatiables in a table, I realized the counties are not sorted)
+
+person_offense18=c(data18_17$CH18, 
+                   data18_17$Rape18, 
+                   data18_17$Rob18,
+                   data18_17$AggBA18)
+
+person_arrests18=c(data18_17$ACH18,
+                   data18_17$Arape18,
+                   data18_17$Arob18,
+                   data18_17$AaggBA18)
+
+property_offense18=c(data18_17$Burg18,
+                     data18_17$Theft18,
+                     data18_17$MVT18,
+                     data18_17$Arson18)
+
+property_arrests18=c(data18_17$ABurg18,
+                     data18_17$ATheft18,
+                     data18_17$AMVT18,
+                     data18_17$Aarson18)
+
+table18=data.table(cbind(person_arrests18, person_offense18, property_arrests18, property_offense18)) # this produced a table with 3744 obs.-unsorted counties.
+
+#examine data
+
+attributes(data18_17)
+str(data18_17$County)
+levels(data18_17$County)
+
+#County case-reduce factor levels
+
+(data18_17$County)
+#Sort data by county
+
+sorted=order(data18_17, na.last = TRUE, decreasing = TRUE, method = County)
